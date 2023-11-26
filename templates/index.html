@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="{{ url_for('index') }}" method="post">
+    <div class="form-field">
+        <label for="symbol">Choose Symbol</label>
+        <select name="symbol" id="symbol">
+            <option value="">Select a Symbol</option>
+            {% for stock in stocks %}
+            <option value="{{ stock.symbol }}" {% if session.symbol == stock.symbol %}selected{% endif %}>{{ stock.symbol }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-field">
+        <label for="chart_type">Choose Chart Type</label>
+        <select name="chart_type" id="chart_type">
+            <option value="">Select a Chart Type</option>
+            {% for chart_type in chart_types %}
+            <option value="{{ chart_type }}" {% if session.chart_type == chart_type %}selected{% endif %}>{{ loop.index }}. {{ chart_type }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-field">
+        <label for="time_series_type">Choose Time Series</label>
+        <select name="time_series_type" id="time_series_type">
+            <option value="">Select a Time Series</option>
+            {% for time_series_type in time_series_types %}
+            <option value="{{ time_series_type }}" {% if session.time_series_type == time_series_type %}selected{% endif %}>{{ loop.index }}. {{ time_series_type }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-field">
+        <label for="start_date">Start Date</label>
+        {% if session.start_date %}
+        <input type="date" name="start_date" id="start_date" value="{{session.start_date}}">
+        {% else %}
+        <input type="date" name="start_date" id="start_date">
+        {% endif %}
+    </div>
+
+    <div class="form-field">
+        <label for="end_date">End Date</label>
+        {% if session.start_date %}
+        <input type="date" name="end_date" id="end_date" value="{{session.end_date}}">
+        {% else %}
+        <input type="date" name="end_date" id="end_date">
+        {% endif %}
+    </div>
+
+    <button type="submit">Submit</button>
+</form>
+
+{% if chart %}
+<div class="chart">
+    <embed type="image/svg+xml" src={{chart.render_data_uri()|safe}} />
+</div>
+{% endif %}
+
+{% endblock %}
